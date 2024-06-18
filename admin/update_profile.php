@@ -12,8 +12,7 @@ if(!isset($admin_id)){
 
 if(isset($_POST['submit'])){
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
+   $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
 
    $update_profile_name = $conn->prepare("UPDATE `admins` SET name = ? WHERE id = ?");
    $update_profile_name->execute([$name, $admin_id]);
@@ -21,25 +20,22 @@ if(isset($_POST['submit'])){
    $empty_pass = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
    $prev_pass = $_POST['prev_pass'];
    $old_pass = sha1($_POST['old_pass']);
-   $old_pass = filter_var($old_pass, FILTER_SANITIZE_STRING);
    $new_pass = sha1($_POST['new_pass']);
-   $new_pass = filter_var($new_pass, FILTER_SANITIZE_STRING);
    $confirm_pass = sha1($_POST['confirm_pass']);
-   $confirm_pass = filter_var($confirm_pass, FILTER_SANITIZE_STRING);
 
    if($old_pass == $empty_pass){
-      $message[] = 'Masukan Password lama!';
+      $message[] = 'Masukkan Password lama!';
    }elseif($old_pass != $prev_pass){
       $message[] = 'Password lama salah!';
    }elseif($new_pass != $confirm_pass){
-      $message[] = 'konfirmasi password tidak sama!';
+      $message[] = 'Konfirmasi password tidak sama!';
    }else{
       if($new_pass != $empty_pass){
          $update_admin_pass = $conn->prepare("UPDATE `admins` SET password = ? WHERE id = ?");
          $update_admin_pass->execute([$confirm_pass, $admin_id]);
-         $message[] = 'password berhasil di ubah!';
+         $message[] = 'Password berhasil diubah!';
       }else{
-         $message[] = 'masukan password baru!';
+         $message[] = 'Masukkan password baru!';
       }
    }
    
@@ -56,39 +52,26 @@ if(isset($_POST['submit'])){
    <title>Ubah Profil</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
    <link rel="stylesheet" href="css/admin_style.css">
 
 </head>
 <body>
 
-
-<?php  include 'admin_header.php'; ?>
+<?php include 'admin_header.php'; ?>
 
 <section class="form-container">
 
    <form action="" method="post">
       <h3>Ubah Profil</h3>
       <input type="hidden" name="prev_pass" value="<?= $fetch_profile['password']; ?>">
-      <input type="text" name="name" value="<?= $fetch_profile['name']; ?>" required placeholder="masukan username" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="old_pass" placeholder="password lama" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="new_pass" placeholder="masukan password baru" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="confirm_pass" placeholder="konfir password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="text" name="name" value="<?= $fetch_profile['name']; ?>" required placeholder="Masukkan username" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="old_pass" placeholder="Password lama" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="new_pass" placeholder="Masukkan password baru" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="confirm_pass" placeholder="Konfirmasi password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="submit" value="Ubah sekarang" class="btn" name="submit">
    </form>
 
 </section>
-
-
-
-
-
-
-
-
-
-
-
 
 <script src="js/admin_script.js"></script>
    
