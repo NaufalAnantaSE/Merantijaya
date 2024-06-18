@@ -14,15 +14,16 @@ if(isset($_SESSION['user_id'])){
 if(isset($_POST['order'])){
 
    $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
    $number = $_POST['number'];
-   $number = filter_var($number, FILTER_SANITIZE_STRING);
    $email = $_POST['email'];
-   $email = filter_var($email, FILTER_SANITIZE_STRING);
    $method = $_POST['method'];
-   $method = filter_var($method, FILTER_SANITIZE_STRING);
-   $address = 'No. Rumah '. $_POST['flat'] .', '. $_POST['street'] .', '. $_POST['city'] .', '. $_POST['state'] .', '. $_POST['country'] .' - '. $_POST['pin_code'];
-   $address = filter_var($address, FILTER_SANITIZE_STRING);
+   $flat = $_POST['flat'];
+   $street = $_POST['street'];
+   $city = $_POST['city'];
+   $state = $_POST['state'];
+   $country = $_POST['country'];
+   $pin_code = $_POST['pin_code'];
+   $address = 'No. Rumah '. $flat .', '. $street .', '. $city .', '. $state .', '. $country .' - '. $pin_code;
    $total_products = $_POST['total_products'];
    $total_price = $_POST['total_price'];
 
@@ -75,7 +76,7 @@ if(isset($_POST['order'])){
       <div class="display-orders">
       <?php
          $grand_total = 0;
-         $cart_items[] = '';
+         $cart_items = [];
          $select_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
          $select_cart->execute([$user_id]);
          if($select_cart->rowCount() > 0){
