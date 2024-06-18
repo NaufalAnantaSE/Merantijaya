@@ -17,93 +17,63 @@ if (isset($_GET['delete'])) {
    $delete_product->execute();
 
    if ($delete_product->rowCount() > 0) {
-      echo "<script>alert('Pembaruan Produk Berhasil');</script>";
+      echo "<script>alert('Produk berhasil dihapus');</script>";
    } else {
-      echo "<script>alert('Gagal memperbarui Produk');</script>";
+      echo "<script>alert('Gagal menghapus produk');</script>";
    }
 
-   // Mengarahkan ulang ke halaman yang sama tanpa parameter 'delete'
-   header("Location: ?mod=produk" );
+   // Redirect to the same page without 'delete' parameter
+   header("Location: ?mod=produk");
    exit;
 }
 
 if(isset($_POST['update'])){
-
    $pid = $_POST['pid'];
    $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
    $price = $_POST['price'];
-   $price = filter_var($price, FILTER_SANITIZE_STRING);
    $details = $_POST['details'];
-   $details = filter_var($details, FILTER_SANITIZE_STRING);
 
+   // Update product details
    $update_product = $conn->prepare("UPDATE `products` SET name = ?, price = ?, details = ? WHERE id = ?");
    $update_product->execute([$name, $price, $details, $pid]);
 
-   $message[] = 'update produk telah berhasil';
+   $message[] = 'Produk berhasil diperbarui';
 
-   $old_image_01 = $_POST['old_image_01'];
-   $image_01 = $_FILES['image_01']['name'];
-   $image_01 = filter_var($image_01, FILTER_SANITIZE_STRING);
-   $image_size_01 = $_FILES['image_01']['size'];
-   $image_tmp_name_01 = $_FILES['image_01']['tmp_name'];
-   $image_folder_01 = 'uploaded_img/'.$image_01;
+   // Handle image uploads
+   $image_folder = 'uploaded_img/';
 
-   if(!empty($image_01)){
-      if($image_size_01 > 2000000){
-         $message[] = 'image size is too large!';
-      }else{
-         $update_image_01 = $conn->prepare("UPDATE `products` SET image_01 = ? WHERE id = ?");
-         $update_image_01->execute([$image_01, $pid]);
-         move_uploaded_file($image_tmp_name_01, $image_folder_01);
-         unlink('uploaded_img/'.$old_image_01);
-         $message[] = 'Ganbar 1 telah berhasil diunggah!';
+   // Function to handle file upload and update database
+   function handleFileUpload($fileKey, $imageName, $oldImageName, $productId, $conn) {
+      $image_name = $_FILES[$fileKey]['name'];
+      $image_size = $_FILES[$fileKey]['size'];
+      $image_tmp_name = $_FILES[$fileKey]['tmp_name'];
+      $image_folder = 'uploaded_img/'.$image_name;
+
+      if(!empty($image_name)){
+         if($image_size > 2000000){
+            return 'Ukuran gambar terlalu besar';
+         } else {
+            $update_image = $conn->prepare("UPDATE `products` SET $imageName = ? WHERE id = ?");
+            $update_image->execute([$image_name, $productId]);
+            move_uploaded_file($image_tmp_name, $image_folder);
+            unlink('uploaded_img/'.$oldImageName);
+            return 'Gambar berhasil diunggah';
+         }
       }
+      return null; // If no image is uploaded
    }
 
-   $old_image_02 = $_POST['old_image_02'];
-   $image_02 = $_FILES['image_02']['name'];
-   $image_02 = filter_var($image_02, FILTER_SANITIZE_STRING);
-   $image_size_02 = $_FILES['image_02']['size'];
-   $image_tmp_name_02 = $_FILES['image_02']['tmp_name'];
-   $image_folder_02 = 'uploaded_img/'.$image_02;
+   // Update image_01
+   $message[] = handleFileUpload('image_01', 'image_01', $_POST['old_image_01'], $pid, $conn);
 
-   if(!empty($image_02)){
-      if($image_size_02 > 2000000){
-         $message[] = 'Ukuran Gambar terlalu besar';
-      }else{
-         $update_image_02 = $conn->prepare("UPDATE `products` SET image_02 = ? WHERE id = ?");
-         $update_image_02->execute([$image_02, $pid]);
-         move_uploaded_file($image_tmp_name_02, $image_folder_02);
-         unlink('uploaded_img/'.$old_image_02);
-         $message[] = 'gambar 2 berhasil di unggah!';
-      }
-   }
+   // Update image_02
+   $message[] = handleFileUpload('image_02', 'image_02', $_POST['old_image_02'], $pid, $conn);
 
-   $old_image_03 = $_POST['old_image_03'];
-   $image_03 = $_FILES['image_03']['name'];
-   $image_03 = filter_var($image_03, FILTER_SANITIZE_STRING);
-   $image_size_03 = $_FILES['image_03']['size'];
-   $image_tmp_name_03 = $_FILES['image_03']['tmp_name'];
-   $image_folder_03 = 'uploaded_img/'.$image_03;
-
-   if(!empty($image_03)){
-      if($image_size_03 > 2000000){
-         $message[] = 'Ukuran Gambar teralu besar!';
-      }else{
-         $update_image_03 = $conn->prepare("UPDATE `products` SET image_03 = ? WHERE id = ?");
-         $update_image_03->execute([$image_03, $pid]);
-         move_uploaded_file($image_tmp_name_03, $image_folder_03);
-         unlink('uploaded_img/'.$old_image_03);
-         $message[] = 'Gambar 3 berhasil di unggah!';
-      }
-   }
-
+   // Update image_03
+   $message[] = handleFileUpload('image_03', 'image_03', $_POST['old_image_03'], $pid, $conn);
 }
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -111,28 +81,26 @@ if(isset($_POST['update'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Update produk</title>
+   <title>Update Produk</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
    <link rel="stylesheet" href="css/admin_style.css">
 
 </head>
 <body>
 
-
-<?php  include 'admin_header.php'; ?>
+<?php include 'admin_header.php'; ?>
 
 <section class="update-product">
-
    <h1 class="heading">Update Produk</h1>
 
    <?php
-      $update_id = $_GET['update'];
-      $select_products = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
-      $select_products->execute([$update_id]);
-      if($select_products->rowCount() > 0){
-         while($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)){ 
+   $update_id = $_GET['update'];
+   $select_products = $conn->prepare("SELECT * FROM `products` WHERE id = ?");
+   $select_products->execute([$update_id]);
+
+   if($select_products->rowCount() > 0){
+      while($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)){ 
    ?>
    <form action="" method="post" enctype="multipart/form-data">
       <input type="hidden" name="pid" value="<?= $fetch_products['id']; ?>">
@@ -150,44 +118,31 @@ if(isset($_POST['update'])){
          </div>
       </div>
       <span>Ubah Nama</span>
-      <input type="text" name="name" required class="box" maxlength="100" placeholder="masukan nama produk" value="<?= $fetch_products['name']; ?>">
+      <input type="text" name="name" required class="box" maxlength="100" placeholder="Masukkan nama produk" value="<?= $fetch_products['name']; ?>">
       <span>Ubah Harga</span>
-      <input type="number" name="price" required class="box" min="0" max="9999999999" placeholder="masukan harga produk" onkeypress="if(this.value.length == 10) return false;" value="<?= $fetch_products['price']; ?>">
+      <input type="number" name="price" required class="box" min="0" max="9999999999" placeholder="Masukkan harga produk" value="<?= $fetch_products['price']; ?>">
       <span>Ubah Detail</span>
       <textarea name="details" class="box" required cols="30" rows="10"><?= $fetch_products['details']; ?></textarea>
-      <span>ubah gambar 01</span>
+      <span>Ubah gambar 01</span>
       <input type="file" name="image_01" accept="image/jpg, image/jpeg, image/png, image/webp" class="box">
       <span>Ubah gambar 02</span>
       <input type="file" name="image_02" accept="image/jpg, image/jpeg, image/png, image/webp" class="box">
       <span>Ubah gambar 03</span>
       <input type="file" name="image_03" accept="image/jpg, image/jpeg, image/png, image/webp" class="box">
       <div class="flex-btn">
-         <input type="submit" name="update" class="btn" value="Ubah sekarang">
+         <input type="submit" name="update" class="btn" value="Ubah Sekarang">
          <a href="?mod=produk" class="option-btn">Kembali</a>
       </div>
    </form>
-   
    <?php
-         }
-      }else{
-         echo '<p class="empty">Kamu belum menambahkan produk</p>';
       }
+   } else {
+      echo '<p class="empty">Produk tidak ditemukan</p>';
+   }
    ?>
 
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
 <script src="js/admin_script.js"></script>
-   
 </body>
 </html>
