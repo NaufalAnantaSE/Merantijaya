@@ -10,10 +10,10 @@ if (isset($_SESSION['user_id'])) {
 }
 
 if (isset($_POST['submit'])) {
-    $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL); // Gunakan FILTER_SANITIZE_EMAIL untuk sanitasi email
-    $pass = sha1($_POST['pass']); // Secara umum, sebaiknya hindari penggunaan SHA1 untuk password, gunakan hashing yang lebih kuat seperti bcrypt
-    $cpass = sha1($_POST['cpass']); // Gunakan FILTER_SANITIZE_STRING untuk sanitasi string
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $pass = sha1($_POST['pass']); // Disarankan untuk menggunakan hashing yang lebih kuat seperti bcrypt
+    $cpass = sha1($_POST['cpass']);
 
     $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
     $select_user->execute([$email]);
@@ -25,7 +25,6 @@ if (isset($_POST['submit'])) {
         if ($pass != $cpass) {
             $message[] = 'Konfirmasi Password Tidak Sama';
         } else {
-            // Disarankan untuk menggunakan prepared statement untuk mencegah SQL injection
             $insert_user = $conn->prepare("INSERT INTO `users`(name, email, password) VALUES(?,?,?)");
             $insert_user->execute([$name, $email, $cpass]);
             $message[] = 'Pendaftaran Berhasil, Silahkan Login';
@@ -58,9 +57,9 @@ if (isset($_POST['submit'])) {
    <form action="" method="post">
       <h3>Buat Akun Baru</h3>
       <input type="text" name="name" required placeholder="Masukkan username Anda" maxlength="20" class="box">
-      <input type="email" name="email" required placeholder="Masukkan email Anda" maxlength="50" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="Masukkan password Anda" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="cpass" required placeholder="Konfirmasi password Anda" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="email" name="email" required placeholder="Masukkan email Anda" maxlength="50" class="box">
+      <input type="password" name="pass" required placeholder="Masukkan password Anda" maxlength="20" class="box">
+      <input type="password" name="cpass" required placeholder="Konfirmasi password Anda" maxlength="20" class="box">
       <input type="submit" value="Daftar Sekarang" class="btn" name="submit">
       <p>Sudah punya Akun?</p>
       <a href="user_login.php" class="option-btn">Login Sekarang</a>
