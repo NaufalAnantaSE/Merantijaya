@@ -12,10 +12,10 @@ if(isset($_SESSION['user_id'])){
 
 if(isset($_POST['send'])){
 
-   $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
-   $email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
-   $number = filter_var($_POST['number'], FILTER_SANITIZE_STRING);
-   $msg = filter_var($_POST['msg'], FILTER_SANITIZE_STRING);
+   $name = $_POST['name'];
+   $email = $_POST['email'];
+   $number = $_POST['number'];
+   $msg = $_POST['msg'];
 
    // Validate the length of the phone number
    if(strlen($number) < 9 || strlen($number) > 15){
@@ -59,11 +59,11 @@ if(isset($_POST['send'])){
 <section class="contact">
 
    <form action="" method="post" onsubmit="return validateForm()">
-      <h3>isi form untuk kami hubungi</h3>
+      <h3>Isi form untuk kami hubungi</h3>
       <input type="text" name="name" placeholder="Nama (wajib)" required maxlength="20" class="box">
-      <input type="email" name="email" placeholder="email aktif" maxlength="50" class="box">
-      <input type="text" name="number" placeholder="nomor yang dapat dihubungi (wajib)" required minlength="9" maxlength="15" class="box" oninput="validateLength(this)">
-      <textarea name="msg" class="box" placeholder="masukan pesan atau pertanyaan kamu" cols="30" rows="10"></textarea>
+      <input type="email" name="email" placeholder="Email aktif" maxlength="50" class="box">
+      <input type="text" name="number" placeholder="Nomor yang dapat dihubungi (wajib)" required minlength="9" maxlength="15" class="box" oninput="validateLength(this)">
+      <textarea name="msg" class="box" placeholder="Masukkan pesan atau pertanyaan Anda" cols="30" rows="10"></textarea>
       <input type="submit" value="Kirim Pesan" name="send" class="btn">
    </form>
 
