@@ -95,7 +95,7 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'logout':
-            include "user_logout.php"
+            include "user_logout.php";
             break;
             
         default:
