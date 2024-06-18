@@ -95,7 +95,7 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'logout':
-            include 'connect.php';
+            include 'components/connect.php';
             session_start();
             session_unset();
             session_destroy();
