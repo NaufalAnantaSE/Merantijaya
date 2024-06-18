@@ -95,8 +95,12 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'logout':
-            include "user_logout.php";
-            break;
+            include 'connect.php';
+            session_start();
+            session_unset();
+            session_destroy();
+            header("location:page.php?mod=home");
+            exit();
             
         default:
             echo "Halaman tidak ditemukan.";
