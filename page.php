@@ -24,7 +24,7 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'hubungikami':
-            include 'templates\contact.php';
+            include 'templates/contact.php';
             break;
 
         case 'wishlist':
