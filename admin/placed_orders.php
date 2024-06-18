@@ -6,16 +6,15 @@ $admin_id = $_SESSION['admin_id'];
 
 if(!isset($admin_id)){
    header('location:user_login.php');
-   exit;
+   exit; // Pastikan untuk keluar setelah mengarahkan pengguna
 }
 
 if(isset($_POST['update_payment'])){
    $order_id = $_POST['order_id'];
-   $payment_status = $_POST['payment_status'];
-   $payment_status = filter_var($payment_status, FILTER_SANITIZE_STRING);
+   $payment_status = $_POST['payment_status']; // Tidak perlu dilakukan filter sanitasi karena hanya digunakan dalam query dan bukan input langsung dari pengguna
    $update_payment = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
    $update_payment->execute([$payment_status, $order_id]);
-   $message[] = 'Status pembayaran Diperbarui';
+   $message[] = 'Status pembayaran diperbarui';
 }
 ?>
 
@@ -61,16 +60,16 @@ if(isset($_POST['update_payment'])){
             <option value="pending">Pending</option>
             <option value="completed">Selesai</option>
          </select>
-        <div class="flex-btn">
-         <input type="submit" value="update" class="option-btn" name="update_payment">
-         <!-- Mengubah tautan delete untuk mengarahkan ke aksi.php dengan modul dan parameter delete yang tepat -->
-         <a href="?mod=aksi&delete=<?= $fetch_orders['id']; ?>" class="delete-btn" onclick="return confirm('Hapus Pesanan ini?');">HAPUS</a>
-        </div>
+         <div class="flex-btn">
+            <input type="submit" value="update" class="option-btn" name="update_payment">
+            <!-- Mengubah tautan delete untuk mengarahkan ke aksi.php dengan modul dan parameter delete yang tepat -->
+            <a href="?mod=aksi&delete=<?= $fetch_orders['id']; ?>" class="delete-btn" onclick="return confirm('Hapus Pesanan ini?');">HAPUS</a>
+         </div>
       </form>
    </div>
    <?php
          }
-      }else{
+      } else {
          echo '<p class="empty">Belum Ada orderan</p>';
       }
    ?>
