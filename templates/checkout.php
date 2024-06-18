@@ -102,11 +102,11 @@ if(isset($_POST['order'])){
       <div class="flex">
          <div class="inputBox">
             <span>Nama Anda :</span>
-            <input type="text" name="name" placeholder="Masukkan nama Anda" class="box" maxlength="20" required>
+            <input type="text" name="name" placeholder="Masukkan nama Anda" class="box" maxlength="100" required>
          </div>
          <div class="inputBox">
             <span>Nomor Telepon :</span>
-            <input type="number" name="number" placeholder="Masukkan nomor telepon Anda" class="box" onkeypress="if(this.value.length == 15) return false;" required>
+            <input type="number" name="number" placeholder="Masukkan nomor telepon Anda" class="box" required>
          </div>
          <div class="inputBox">
             <span>Email Anda :</span>
@@ -123,23 +123,23 @@ if(isset($_POST['order'])){
          </div>
          <div class="inputBox">
             <span>Alamat Baris 01 :</span>
-            <input type="text" name="flat" placeholder="Misal: Nomor Rumah" class="box" maxlength="50" required>
+            <input type="text" name="flat" placeholder="Misal: Nomor Rumah" class="box" maxlength="150" required>
          </div>
          <div class="inputBox">
             <span>Alamat Baris 02 :</span>
-            <input type="text" name="street" placeholder="Nama Jalan" class="box" maxlength="50" required>
+            <input type="text" name="street" placeholder="Nama Jalan" class="box" maxlength="150" required>
          </div>
          <div class="inputBox">
             <span>Kota :</span>
-            <input type="text" name="city" placeholder="Misal: Jakarta" class="box" maxlength="50" required>
+            <input type="text" name="city" placeholder="Misal: Jakarta" class="box" maxlength="150" required>
          </div>
          <div class="inputBox">
             <span>Provinsi :</span>
-            <input type="text" name="state" placeholder="Misal: DKI Jakarta" class="box" maxlength="50" required>
+            <input type="text" name="state" placeholder="Misal: DKI Jakarta" class="box" maxlength="150" required>
          </div>
          <div class="inputBox">
             <span>Negara :</span>
-            <input type="text" name="country" placeholder="Misal: Indonesia" class="box" maxlength="50" required>
+            <input type="text" name="country" placeholder="Misal: Indonesia" class="box" maxlength="150" required>
          </div>
          <div class="inputBox">
             <span>Kode Pos :</span>
