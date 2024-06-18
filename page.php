@@ -95,9 +95,8 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'logout':
-            session_destroy();
-            header('location:page.php?mod=home');
-            exit();
+            include "user_logout.php"
+            break;
             
         default:
             echo "Halaman tidak ditemukan.";
