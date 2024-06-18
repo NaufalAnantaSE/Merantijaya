@@ -96,7 +96,7 @@ if (isset($_GET['mod'])) {
 
         case 'logout':
             session_destroy();
-            include ('index.php');
+            header('location:page.php?mod=home');
             exit();
             
         default:
