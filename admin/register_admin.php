@@ -11,29 +11,24 @@ if(!isset($admin_id)){
 }
 
 if(isset($_POST['submit'])){
-
    $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
    $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
    $cpass = sha1($_POST['cpass']);
-   $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
 
    $select_admin = $conn->prepare("SELECT * FROM `admins` WHERE name = ?");
    $select_admin->execute([$name]);
 
    if($select_admin->rowCount() > 0){
-      $message[] = 'username sudah terdaftar';
-   }else{
+      $message[] = 'Username sudah terdaftar';
+   } else {
       if($pass != $cpass){
-         $message[] = 'komfirmasi password tidak sama';
-      }else{
-         $insert_admin = $conn->prepare("INSERT INTO `admins`(name, password) VALUES(?,?)");
+         $message[] = 'Konfirmasi password tidak sama';
+      } else {
+         $insert_admin = $conn->prepare("INSERT INTO `admins` (name, password) VALUES (?, ?)");
          $insert_admin->execute([$name, $cpass]);
-         $message[] = 'admin baru berhasil ditambahkan';
+         $message[] = 'Admin baru berhasil ditambahkan';
       }
    }
-
 }
 
 ?>
@@ -47,39 +42,22 @@ if(isset($_POST['submit'])){
    <title>Tambah Admin</title>
 
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
    <link rel="stylesheet" href="css/admin_style.css">
-
 </head>
 <body>
 
-
-<?php  include 'admin_header.php'; ?>
+<?php include 'admin_header.php'; ?>
 
 <section class="form-container">
-
    <form action="" method="post">
-      <h3>Tambah sekarang</h3>
-      <input type="text" name="name" required placeholder="masukan username" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="pass" required placeholder="masukan password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="password" name="cpass" required placeholder="konfirmasi password" maxlength="20"  class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <h3>Tambah Sekarang</h3>
+      <input type="text" name="name" required placeholder="Masukkan username" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="pass" required placeholder="Masukkan password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
+      <input type="password" name="cpass" required placeholder="Konfirmasi password" maxlength="20" class="box" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="submit" value="Daftar" class="btn" name="submit">
    </form>
-
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
 <script src="js/admin_script.js"></script>
-   
 </body>
 </html>
