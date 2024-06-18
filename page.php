@@ -95,8 +95,6 @@ if (isset($_GET['mod'])) {
             break;
 
         case 'logout':
-            session_start();
-            session_unset();
             session_destroy();
             include ('index.php');
             exit();
