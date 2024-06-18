@@ -26,10 +26,9 @@ if(isset($_GET['delete_all'])){
 if(isset($_POST['update_qty'])){
    $cart_id = $_POST['cart_id'];
    $qty = $_POST['qty'];
-   $qty = filter_var($qty, FILTER_SANITIZE_STRING);
    $update_qty = $conn->prepare("UPDATE `cart` SET quantity = ? WHERE id = ?");
    $update_qty->execute([$qty, $cart_id]);
-   $message[] = 'jumlah keranjang diperbarui';
+   $message[] = 'Jumlah keranjang diperbarui';
 }
 
 ?>
@@ -105,3 +104,4 @@ if(isset($_POST['update_qty'])){
 
 </body>
 </html>
+
