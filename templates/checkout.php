@@ -9,7 +9,7 @@ if(isset($_SESSION['user_id'])){
 }else{
    $user_id = '';
    header('location:page.php?mod=login');
-};
+}
 
 if(isset($_POST['order'])){
 
@@ -27,22 +27,25 @@ if(isset($_POST['order'])){
    $total_products = $_POST['total_products'];
    $total_price = $_POST['total_price'];
 
-   $check_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
-   $check_cart->execute([$user_id]);
+   if(strlen($number) < 9 || strlen($number) > 15){
+      $message[] = 'Nomor telepon harus antara 9 sampai 15 digit.';
+   } else {
+      $check_cart = $conn->prepare("SELECT * FROM `cart` WHERE user_id = ?");
+      $check_cart->execute([$user_id]);
 
-   if($check_cart->rowCount() > 0){
+      if($check_cart->rowCount() > 0){
 
-      $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
-      $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
+         $insert_order = $conn->prepare("INSERT INTO `orders`(user_id, name, number, email, method, address, total_products, total_price) VALUES(?,?,?,?,?,?,?,?)");
+         $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price]);
 
-      $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
-      $delete_cart->execute([$user_id]);
+         $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE user_id = ?");
+         $delete_cart->execute([$user_id]);
 
-      $message[] = 'Pesanan berhasil dibuat!';
-   }else{
-      $message[] = 'Keranjang belanja Anda kosong';
+         $message[] = 'Pesanan berhasil dibuat!';
+      } else {
+         $message[] = 'Keranjang belanja Anda kosong';
+      }
    }
-
 }
 
 ?>
@@ -88,7 +91,7 @@ if(isset($_POST['order'])){
          <p> <?= $fetch_cart['name']; ?> <span>(<?= 'Rp.'.$fetch_cart['price'].'/- x '. $fetch_cart['quantity']; ?>)</span> </p>
       <?php
             }
-         }else{
+         } else {
             echo '<p class="empty">Keranjang belanja Anda kosong!</p>';
          }
       ?>
